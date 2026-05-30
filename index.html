@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="MaidConnect">
   <link rel="apple-touch-icon" href="/icon.png.jpg">
-  <title>MaidConnect Dashboard</title>
+  <title>MaidConnect</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -27,19 +27,17 @@
     header h1 { color: #f5c518; font-size: 1.8rem; }
     header p { color: #4ecdc4; margin-top: 5px; }
     .stats {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      padding: 30px 20px;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      padding: 20px;
     }
     .stat-card {
       background: #1a1740;
       border-radius: 12px;
-      padding: 20px 30px;
+      padding: 20px 15px;
       text-align: center;
       border: 1px solid #2a2460;
-      min-width: 140px;
     }
     .stat-card .number {
       font-size: 2.5rem;
@@ -52,8 +50,6 @@
       font-size: 0.9rem;
     }
     .section {
-      max-width: 800px;
-      margin: 0 auto;
       padding: 0 20px 40px;
     }
     .section h2 {
@@ -90,11 +86,13 @@
       background: #f5c518;
       color: #0f0c29;
       border: none;
-      padding: 10px 25px;
+      padding: 12px 25px;
       border-radius: 8px;
       font-weight: bold;
       cursor: pointer;
       margin-bottom: 20px;
+      width: 100%;
+      font-size: 1rem;
     }
     .empty { color: #666; text-align: center; padding: 30px; }
     .db-status {
@@ -121,4 +119,73 @@
     <div class="number" id="doorbell-count">—</div>
     <div class="label">Doorbell Rings</div>
   </div>
-  <div c
+  <div class="stat-card">
+    <div class="number" id="motion-count">—</div>
+    <div class="label">Motion Events</div>
+  </div>
+  <div class="stat-card">
+    <div class="number" id="user-count">—</div>
+    <div class="label">Linked Users</div>
+  </div>
+</div>
+
+<div class="section">
+  <button class="refresh-btn" onclick="loadData()">🔄 Refresh</button>
+  <h2>Recent Events</h2>
+  <div class="event-list" id="event-list">
+    <div class="empty">Loading events...</div>
+  </div>
+</div>
+
+<div class="db-status" id="db-status">Connecting...</div>
+
+<script>
+  const API = 'https://maidconnect-backend.onrender.com';
+
+  async function loadData() {
+    try {
+      const health = await fetch(API + '/').then(r => r.json());
+      document.getElementById('db-status').textContent =
+        '🟢 Backend: ' + health.status + ' | DB: ' + health.db;
+
+      const events = await fetch(API + '/events').then(r => r.json());
+      const users = await fetch(API + '/users').then(r => r.json());
+
+      const doorbell = events.filter(e => e.eventType === 'doorbell.ring').length;
+      const motion = events.filter(e => e.eventType === 'motion.detect').length;
+
+      document.getElementById('total-events').textContent = events.length;
+      document.getElementById('doorbell-count').textContent = doorbell;
+      document.getElementById('motion-count').textContent = motion;
+      document.getElementById('user-count').textContent = users.length;
+
+      const list = document.getElementById('event-list');
+      if (events.length === 0) {
+        list.innerHTML = '<div class="empty">No events yet. Ring your doorbell to test!</div>';
+        return;
+      }
+
+      list.innerHTML = events.slice().reverse().map(e => `
+        <div class="event-item ${e.eventType === 'motion.detect' ? 'motion' : ''}">
+          <div>
+            <div class="event-type">
+              ${e.eventType === 'doorbell.ring' ? '🔔 Doorbell Ring' :
+                e.eventType === 'motion.detect' ? '🚶 Motion Detected' :
+                '❓ ' + e.eventType}
+            </div>
+          </div>
+          <div class="event-time">${new Date(e.receivedAt).toLocaleString()}</div>
+        </div>
+      `).join('');
+
+    } catch (err) {
+      document.getElementById('db-status').textContent = '🔴 Backend offline or waking up...';
+    }
+  }
+
+  loadData();
+  setInterval(loadData, 30000);
+</script>
+
+</body>
+</html>
