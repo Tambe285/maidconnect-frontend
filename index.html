@@ -1,1 +1,189 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MaidConnect Dashboard</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f0c29;
+      color: white;
+      min-height: 100vh;
+    }
+    header {
+      background: #1a1740;
+      padding: 20px;
+      text-align: center;
+      border-bottom: 2px solid #f5c518;
+    }
+    header h1 { color: #f5c518; font-size: 1.8rem; }
+    header p { color: #4ecdc4; margin-top: 5px; }
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      padding: 30px 20px;
+      flex-wrap: wrap;
+    }
+    .stat-card {
+      background: #1a1740;
+      border-radius: 12px;
+      padding: 20px 30px;
+      text-align: center;
+      border: 1px solid #2a2460;
+      min-width: 140px;
+    }
+    .stat-card .number {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #f5c518;
+    }
+    .stat-card .label {
+      color: #aaa;
+      margin-top: 5px;
+      font-size: 0.9rem;
+    }
+    .section {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 20px 40px;
+    }
+    .section h2 {
+      color: #4ecdc4;
+      margin-bottom: 15px;
+      font-size: 1.2rem;
+    }
+    .event-list { display: flex; flex-direction: column; gap: 10px; }
+    .event-item {
+      background: #1a1740;
+      border-radius: 10px;
+      padding: 15px;
+      border-left: 4px solid #f5c518;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .event-item.motion { border-left-color: #4ecdc4; }
+    .event-item.unknown { border-left-color: #666; }
+    .event-type { font-weight: bold; font-size: 1rem; }
+    .event-time { color: #aaa; font-size: 0.8rem; }
+    .status-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: #4ecdc4;
+      display: inline-block;
+      margin-right: 8px;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    .refresh-btn {
+      background: #f5c518;
+      color: #0f0c29;
+      border: none;
+      padding: 10px 25px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+    .empty { color: #666; text-align: center; padding: 30px; }
+    .db-status {
+      text-align: center;
+      padding: 10px;
+      color: #4ecdc4;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>✅ MaidConnect</h1>
+  <p><span class="status-dot"></span>Dashboard — Live</p>
+</header>
+
+<div class="stats">
+  <div class="stat-card">
+    <div class="number" id="total-events">—</div>
+    <div class="label">Total Events</div>
+  </div>
+  <div class="stat-card">
+    <div class="number" id="doorbell-count">—</div>
+    <div class="label">Doorbell Rings</div>
+  </div>
+  <div class="stat-card">
+    <div class="number" id="motion-count">—</div>
+    <div class="label">Motion Events</div>
+  </div>
+  <div class="stat-card">
+    <div class="number" id="user-count">—</div>
+    <div class="label">Linked Users</div>
+  </div>
+</div>
+
+<div class="section">
+  <button class="refresh-btn" onclick="loadData()">🔄 Refresh</button>
+  <h2>Recent Events</h2>
+  <div class="event-list" id="event-list">
+    <div class="empty">Loading events...</div>
+  </div>
+</div>
+
+<div class="db-status" id="db-status">Connecting...</div>
+
+<script>
+  const API = 'https://maidconnect-backend.onrender.com';
+
+  async function loadData() {
+    try {
+      const health = await fetch(API + '/').then(r => r.json());
+      document.getElementById('db-status').textContent =
+        '🟢 Backend: ' + health.status + ' | DB: ' + health.db;
+
+      const events = await fetch(API + '/events').then(r => r.json());
+      const users = await fetch(API + '/users').then(r => r.json());
+
+      const doorbell = events.filter(e => e.eventType === 'doorbell.ring').length;
+      const motion = events.filter(e => e.eventType === 'motion.detect').length;
+
+      document.getElementById('total-events').textContent = events.length;
+      document.getElementById('doorbell-count').textContent = doorbell;
+      document.getElementById('motion-count').textContent = motion;
+      document.getElementById('user-count').textContent = users.length;
+
+      const list = document.getElementById('event-list');
+      if (events.length === 0) {
+        list.innerHTML = '<div class="empty">No events yet. Ring your doorbell to test!</div>';
+        return;
+      }
+
+      list.innerHTML = events.slice().reverse().map(e => `
+        <div class="event-item ${e.eventType === 'motion.detect' ? 'motion' : ''}">
+          <div>
+            <div class="event-type">
+              ${e.eventType === 'doorbell.ring' ? '🔔 Doorbell Ring' :
+                e.eventType === 'motion.detect' ? '🚶 Motion Detected' :
+                '❓ ' + e.eventType}
+            </div>
+          </div>
+          <div class="event-time">${new Date(e.receivedAt).toLocaleString()}</div>
+        </div>
+      `).join('');
+
+    } catch (err) {
+      document.getElementById('db-status').textContent = '🔴 Backend offline or waking up...';
+    }
+  }
+
+  loadData();
+  setInterval(loadData, 30000);
+</script>
+
+</body>
+</html>
