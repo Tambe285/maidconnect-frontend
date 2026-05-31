@@ -1,191 +1,913 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-IN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="manifest" href="/manifest.json">
-  <meta name="theme-color" content="#f5c518">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="MaidConnect">
-  <link rel="apple-touch-icon" href="/icon.png.jpg">
-  <title>MaidConnect</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MaidConnect — Verified Domestic Help for Indian Homes</title>
+  <meta name="description" content="Find verified maids, cooks, nannies & caretakers in India. Digital contracts, fair wages, rest-day protection. Join the waitlist today."/>
+  
+  <!-- Open Graph / Social -->
+  <meta property="og:title" content="MaidConnect — Verified Domestic Help for Indian Homes"/>
+  <meta property="og:description" content="Aadhaar-verified workers, digital contracts, fair wages. Join 5,000+ families on the waitlist."/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:image" content="https://maidconnect.in/og-image.png"/>
+  <meta property="og:url" content="https://maidconnect.in"/>
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧹</text></svg>">
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;700&display=swap" rel="stylesheet">
+  
   <style>
+    :root {
+      --primary: #FF9933;    /* Saffron */
+      --primary-dark: #E68A2E;
+      --secondary: #138808;  /* Green */
+      --accent: #000080;     /* Navy */
+      --light: #FFF9F0;
+      --dark: #1A1A1A;
+      --gray: #6B7280;
+      --shadow: 0 4px 20px rgba(0,0,0,0.08);
+      --radius: 16px;
+    }
+    
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: Arial, sans-serif;
-      background: #0f0c29;
-      color: white;
-      min-height: 100vh;
+      font-family: 'Inter', 'Noto Sans Devanagari', sans-serif;
+      background: #fff;
+      color: var(--dark);
+      line-height: 1.6;
+      overflow-x: hidden;
     }
-    header {
-      background: #1a1740;
-      padding: 20px;
+    
+    /* Utilities */
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+    .btn {
+      display: inline-block;
+      padding: 14px 28px;
+      background: var(--primary);
+      color: white;      border: none;
+      border-radius: 50px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
       text-align: center;
-      border-bottom: 2px solid #f5c518;
     }
-    header h1 { color: #f5c518; font-size: 1.8rem; }
-    header p { color: #4ecdc4; margin-top: 5px; }
-    .stats {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px;
-      padding: 20px;
+    .btn:hover { background: var(--primary-dark); transform: translateY(-2px); }
+    .btn-secondary {
+      background: white;
+      color: var(--primary);
+      border: 2px solid var(--primary);
     }
-    .stat-card {
-      background: #1a1740;
-      border-radius: 12px;
-      padding: 20px 15px;
-      text-align: center;
-      border: 1px solid #2a2460;
-    }
-    .stat-card .number {
+    .btn-secondary:hover { background: var(--light); }
+    .text-center { text-align: center; }
+    .section { padding: 80px 0; }
+    .section-title {
       font-size: 2.5rem;
-      font-weight: bold;
-      color: #f5c518;
+      font-weight: 700;
+      margin-bottom: 16px;
+      line-height: 1.2;
     }
-    .stat-card .label {
-      color: #aaa;
-      margin-top: 5px;
-      font-size: 0.9rem;
+    .section-subtitle {
+      font-size: 1.25rem;
+      color: var(--gray);
+      max-width: 600px;
+      margin: 0 auto 40px;
     }
-    .section {
-      padding: 0 20px 40px;
+    
+    /* Header */
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      padding: 16px 0;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.05);
     }
-    .section h2 {
-      color: #4ecdc4;
-      margin-bottom: 15px;
-      font-size: 1.2rem;
-    }
-    .event-list { display: flex; flex-direction: column; gap: 10px; }
-    .event-item {
-      background: #1a1740;
-      border-radius: 10px;
-      padding: 15px;
-      border-left: 4px solid #f5c518;
+    .nav {
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-    .event-item.motion { border-left-color: #4ecdc4; }
-    .event-type { font-weight: bold; font-size: 1rem; }
-    .event-time { color: #aaa; font-size: 0.8rem; }
-    .status-dot {
-      width: 10px; height: 10px;
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent);      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .logo-icon { font-size: 1.8rem; }
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+    .nav-links a {
+      color: var(--dark);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover { color: var(--primary); }
+    .mobile-toggle { display: none; font-size: 1.5rem; cursor: pointer; }
+    
+    /* Hero */
+    .hero {
+      padding: 160px 0 100px;
+      background: linear-gradient(135deg, var(--light) 0%, #fff 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(255,153,51,0.1) 0%, transparent 70%);
       border-radius: 50%;
-      background: #4ecdc4;
-      display: inline-block;
-      margin-right: 8px;
-      animation: pulse 2s infinite;
     }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
     }
-    .refresh-btn {
-      background: #f5c518;
-      color: #0f0c29;
-      border: none;
-      padding: 12px 25px;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-      margin-bottom: 20px;
+    .hero-content h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 24px;
+    }
+    .hero-content h1 span {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-content p {
+      font-size: 1.25rem;
+      color: var(--gray);
+      margin-bottom: 32px;
+      max-width: 500px;
+    }
+    .hero-cta {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .hero-image {
+      position: relative;
+    }
+    .hero-image img {
       width: 100%;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      animation: float 6s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    /* Trust Badges */
+    .trust-badges {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      flex-wrap: wrap;
+      margin-top: 40px;
+      opacity: 0.8;
+    }
+    .badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+      color: var(--gray);
+    }
+    
+    /* Features */
+    .features { background: #fff; }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));      gap: 32px;
+      margin-top: 40px;
+    }
+    .feature-card {
+      padding: 32px;
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      transition: transform 0.3s;
+    }
+    .feature-card:hover { transform: translateY(-5px); }
+    .feature-icon {
+      font-size: 2.5rem;
+      margin-bottom: 16px;
+    }
+    .feature-card h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .feature-card p { color: var(--gray); font-size: 0.95rem; }
+    
+    /* How It Works */
+    .how-it-works { background: var(--light); }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 24px;
+      margin-top: 40px;
+      counter-reset: step;
+    }
+    .step {
+      text-align: center;
+      padding: 24px;
+      position: relative;
+    }
+    .step::before {
+      counter-increment: step;
+      content: counter(step);
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 32px;
+      height: 32px;
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;      justify-content: center;
+      font-weight: 700;
       font-size: 1rem;
     }
-    .empty { color: #666; text-align: center; padding: 30px; }
-    .db-status {
-      text-align: center;
-      padding: 10px;
-      color: #4ecdc4;
+    .step h4 {
+      font-weight: 600;
+      margin: 20px 0 12px;
+    }
+    .step p { color: var(--gray); font-size: 0.95rem; }
+    
+    /* Pricing */
+    .pricing { background: #fff; }
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 32px;
+      margin-top: 40px;
+    }
+    .pricing-card {
+      padding: 32px;
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 2px solid #e5e7eb;
+      position: relative;
+    }
+    .pricing-card.popular {
+      border-color: var(--primary);
+      box-shadow: 0 8px 24px rgba(255,153,51,0.15);
+    }
+    .pricing-card .badge {
+      position: absolute;
+      top: -12px;
+      right: 20px;
+      background: var(--primary);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .pricing-card h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .price {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--dark);      margin: 16px 0;
+    }
+    .price span {
+      font-size: 1rem;
+      font-weight: 400;
+      color: var(--gray);
+    }
+    .yearly-price {
+      display: block;
+      font-size: 1rem;
+      color: var(--secondary);
+      margin-top: 4px;
+    }
+    .features-list {
+      list-style: none;
+      padding: 0;
+      margin: 24px 0;
+    }
+    .features-list li {
+      padding: 8px 0;
+      border-bottom: 1px solid #f3f4f6;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .features-list li.disabled {
+      color: var(--gray);
+      text-decoration: line-through;
+    }
+    
+    /* Care Services */
+    .care-services { background: #F8FAFC; }
+    .care-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 32px;
+      margin-top: 40px;
+    }
+    .care-card {
+      padding: 32px;
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border-top: 4px solid;
+    }
+    .care-card.elder { border-color: #8B5CF6; }
+    .care-card.child { border-color: #06B6D4; }
+    .care-card.patient { border-color: #F59E0B; }
+    .care-card h3 {
+      font-size: 1.25rem;      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .care-card p { color: var(--gray); margin-bottom: 16px; }
+    .care-card ul {
+      text-align: left;
+      padding-left: 20px;
+      color: var(--gray);
+      font-size: 0.95rem;
+    }
+    .care-card .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 6px;
       font-size: 0.85rem;
+      font-weight: 500;
+      margin-top: 8px;
+    }
+    .care-card.elder .badge { background: #F5F3FF; color: #7C3AED; }
+    .care-card.child .badge { background: #F0FDFA; color: #0D9488; }
+    .care-card.patient .badge { background: #FFFBEB; color: #B45309; }
+    
+    /* Dignity Awards */
+    .awards {
+      background: linear-gradient(135deg, var(--accent) 0%, #1a1a4a 100%);
+      color: white;
+      text-align: center;
+    }
+    .awards .section-title { color: white; }
+    .awards .section-subtitle { color: rgba(255,255,255,0.8); }
+    .award-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 24px;
+      margin: 40px 0;
+    }
+    .stat {
+      padding: 24px;
+      background: rgba(255,255,255,0.1);
+      border-radius: var(--radius);
+    }
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+    .stat-label { font-size: 0.95rem; opacity: 0.9; }
+    
+    /* Waitlist Form */
+    .waitlist { background: #fff; }    .form-container {
+      max-width: 500px;
+      margin: 0 auto;
+      background: white;
+      padding: 32px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .form-group { margin-bottom: 20px; }
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 14px;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      font-size: 1rem;
+      transition: border-color 0.3s;
+    }
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    .form-note {
+      font-size: 0.85rem;
+      color: var(--gray);
+      margin-top: 8px;
+    }
+    .success-message {
+      display: none;
+      padding: 16px;
+      background: #d1fae5;
+      color: #065f46;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    
+    /* Footer */
+    footer {
+      background: var(--dark);
+      color: white;
+      padding: 40px 0 20px;
+      text-align: center;
+    }    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin: 20px 0;
+      flex-wrap: wrap;
+    }
+    .footer-links a {
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .footer-links a:hover { color: var(--primary); }
+    .copyright {
+      color: rgba(255,255,255,0.6);
+      font-size: 0.9rem;
+      margin-top: 20px;
+    }
+    
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .mobile-toggle { display: block; }
+      .hero-grid { grid-template-columns: 1fr; text-align: center; }
+      .hero-content h1 { font-size: 2.5rem; }
+      .hero-cta { justify-content: center; }
+      .section-title { font-size: 2rem; }
+      .section { padding: 60px 0; }
+      .pricing-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
-<header>
-  <h1>✅ MaidConnect</h1>
-  <p><span class="status-dot"></span>Dashboard — Live</p>
-</header>
+  <!-- Header -->
+  <header>
+    <div class="container nav">
+      <div class="logo">
+        <span class="logo-icon">🧹</span>
+        MaidConnect
+      </div>
+      <nav class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#care">Care Services</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#waitlist" class="btn">Join Waitlist</a>
+      </nav>
+      <div class="mobile-toggle">☰</div>
+    </div>
+  </header>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-content">
+        <h1>Verified Care for Your <span>Home & Family</span></h1>
+        <p>From cooks to elder care — find trusted, verified support for your household and loved ones. Digital contracts, salary receipts, and peace of mind.</p>
+        <div class="hero-cta">
+          <a href="#waitlist" class="btn">Join Waitlist — Free</a>
+          <a href="#features" class="btn btn-secondary">Learn More</a>
+        </div>
+        <div class="trust-badges">
+          <div class="badge">✅ Aadhaar Verified</div>
+          <div class="badge">👨‍👩‍👧‍👦 Family Care Options</div>
+          <div class="badge">💳 UPI Salary Receipts</div>
+          <div class="badge">🔄 Auto-Replacement</div>
+        </div>
+      </div>
+      <div class="hero-image">
+        <!-- Placeholder: Replace with your app screenshot/mockup -->
+        <div style="background: linear-gradient(135deg, #FF9933, #138808); border-radius: 20px; height: 400px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; text-align: center; padding: 20px;">
+          App Preview<br/>
+          <small style="font-weight:400; opacity:0.9; display:block; margin-top:8px;">(Replace with screenshot)</small>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<div class="stats">
-  <div class="stat-card">
-    <div class="number" id="total-events">—</div>
-    <div class="label">Total Events</div>
-  </div>
-  <div class="stat-card">
-    <div class="number" id="doorbell-count">—</div>
-    <div class="label">Doorbell Rings</div>
-  </div>
-  <div class="stat-card">
-    <div class="number" id="motion-count">—</div>
-    <div class="label">Motion Events</div>
-  </div>
-  <div class="stat-card">
-    <div class="number" id="user-count">—</div>
-    <div class="label">Linked Users</div>
-  </div>
-</div>
+  <!-- Features -->
+  <section id="features" class="section features">
+    <div class="container">
+      <h2 class="section-title text-center">Built for India, Designed for Dignity</h2>
+      <p class="section-subtitle text-center">Every feature crafted with Indian households and domestic workers in mind.</p>
+      
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">✅</div>
+          <h3>Verified Workers</h3>
+          <p>Aadhaar + e-Shram verification for every worker. Background checks optional. Trust built-in.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📜</div>
+          <h3>Smart Contracts</h3>
+          <p>Auto-generated digital contracts compliant with your state's labor laws. Rest-day protection included.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🤖</div>
+          <h3>AI Matching</h3>
+          <p>Smart suggestions based on skills, location, reviews & compatibility. Fair wage mediation included.</p>
+        </div>        <div class="feature-card">
+          <div class="feature-icon">💬</div>
+          <h3>Voice-First Chat</h3>
+          <p>In-app messaging with auto-translate (10+ Indian languages). Speak, don't type.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📅</div>
+          <h3>Task Management</h3>
+          <p>Employers assign tomorrow's tasks tonight. Workers see them in the morning. Simple.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🛡️</div>
+          <h3>Safety First</h3>
+          <p>One-tap safety beacon + NGO escalation path. Worker privacy protected by design.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<div class="section">
-  <button class="refresh-btn" onclick="loadData()">🔄 Refresh</button>
-  <h2>Recent Events</h2>
-  <div class="event-list" id="event-list">
-    <div class="empty">Loading events...</div>
-  </div>
-</div>
+  <!-- Care Services -->
+  <section id="care" class="section care-services">
+    <div class="container">
+      <h2 class="section-title text-center">Care for Your Whole Family</h2>
+      <p class="section-subtitle text-center">Beyond cleaning & cooking — trusted support for those who matter most.</p>
+      
+      <div class="care-grid">
+        <!-- Elder Care Card -->
+        <div class="care-card elder">
+          <div style="font-size:2.5rem; margin-bottom:12px;">🧓</div>
+          <h3>Elder Care Specialists</h3>
+          <p>Compassionate caretakers trained in:</p>
+          <ul>
+            <li>Medication reminders & tracking</li>
+            <li>Mobility assistance & fall prevention</li>
+            <li>Companionship & mental wellness</li>
+            <li>Emergency response protocols</li>
+          </ul>
+          <div class="badge">✓ First-Aid Certified</div>
+        </div>
+        
+        <!-- Child Care Card -->
+        <div class="care-card child">
+          <div style="font-size:2.5rem; margin-bottom:12px;">👶</div>
+          <h3>Trusted Nannies & Babysitters</h3>
+          <p>Verified caregivers who provide:</p>
+          <ul>
+            <li>Age-appropriate activities & learning</li>
+            <li>School pickup/drop-off support</li>
+            <li>Meal prep for kids + hygiene care</li>
+            <li>Real-time activity logs for parents</li>          </ul>
+          <div class="badge">✓ Background Checked</div>
+        </div>
+        
+        <!-- Patient/Disability Care Card -->
+        <div class="care-card patient">
+          <div style="font-size:2.5rem; margin-bottom:12px;">🏥</div>
+          <h3>Special Needs Support</h3>
+          <p>Skilled helpers for:</p>
+          <ul>
+            <li>Post-surgery recovery assistance</li>
+            <li>Chronic condition daily support</li>
+            <li>Disability-inclusive care training</li>
+            <li>Respite care for family caregivers</li>
+          </ul>
+          <div class="badge">✓ Empathy-Trained</div>
+        </div>
+      </div>
+      
+      <!-- Trust Badge Row -->
+      <div style="display:flex; justify-content:center; gap:24px; flex-wrap:wrap; margin-top:32px; opacity:0.9;">
+        <div style="display:flex; align-items:center; gap:8px; font-size:0.9rem;">
+          <span>🔐</span> Police Verification Optional
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; font-size:0.9rem;">
+          <span>📋</span> Care Plan Templates Included
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; font-size:0.9rem;">
+          <span>🚨</span> Emergency Contact Integration
+        </div>
+      </div>
+    </div>
+  </section>
 
-<div class="db-status" id="db-status">Connecting...</div>
+  <!-- How It Works -->
+  <section class="section how-it-works">
+    <div class="container">
+      <h2 class="section-title text-center">How MaidConnect Works</h2>
+      <p class="section-subtitle text-center">From signup to hire — simple, transparent, and fair.</p>
+      
+      <div class="steps">
+        <div class="step">
+          <h4>Sign Up</h4>
+          <p>Employers & workers create profiles in 60 seconds. Choose your role.</p>
+        </div>
+        <div class="step">
+          <h4>Get Matched</h4>
+          <p>AI suggests compatible matches based on skills, location & preferences.</p>
+        </div>
+        <div class="step">          <h4>Agree & Hire</h4>
+          <p>Review digital contract, negotiate fairly, sign digitally. Start work.</p>
+        </div>
+        <div class="step">
+          <h4>Work with Dignity</h4>
+          <p>Track tasks, payments & rest days. 5% of profits fund worker dreams.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<script>
-  const API = 'https://maidconnect-backend.onrender.com';
+  <!-- Pricing -->
+  <section id="pricing" class="section pricing">
+    <div class="container">
+      <h2 class="section-title text-center">Simple, Transparent Pricing</h2>
+      <p class="section-subtitle text-center">Choose the plan that fits your needs. Cancel anytime.</p>
+      
+      <div class="pricing-grid">
+        <!-- Basic -->
+        <div class="pricing-card">
+          <div class="plan-name">Basic</div>
+          <div class="price">₹149<span>/month</span></div>
+          <div class="yearly-price">₹1,499/year • Save 17%</div>
+          <ul class="features-list">
+            <li>✅ Post 5 jobs/month</li>
+            <li>✅ View 20 worker profiles</li>
+            <li>✅ Digital contracts</li>
+            <li>✅ Standard support</li>
+            <li>✅ UPI payment tracking</li>
+            <li class="disabled">❌ Priority matching</li>
+            <li class="disabled">❌ Replacement guarantee</li>
+          </ul>
+          <a href="#waitlist" class="btn btn-secondary" style="width:100%;">Start Free Trial</a>
+        </div>
 
-  async function loadData() {
-    try {
-      const health = await fetch(API + '/').then(r => r.json());
-      document.getElementById('db-status').textContent =
-        '🟢 Backend: ' + health.status + ' | DB: ' + health.db;
+        <!-- Premium (Popular) -->
+        <div class="pricing-card popular">
+          <div class="badge">Most Popular</div>
+          <div class="plan-name">Premium</div>
+          <div class="price">₹299<span>/month</span></div>
+          <div class="yearly-price">₹2,799/year • Save 7%</div>
+          <ul class="features-list">
+            <li>✅ Unlimited job posts</li>
+            <li>✅ Unlimited profile views</li>
+            <li>✅ Priority AI matching</li>
+            <li>✅ Digital contracts + e-sign</li>
+            <li>✅ Replacement guarantee</li>
+            <li>✅ Dedicated support</li>
+            <li>✅ Advanced analytics</li>
+          </ul>          <a href="#waitlist" class="btn" style="width:100%;">Start Free Trial</a>
+        </div>
+      </div>
+      
+      <!-- B2B Note -->
+      <div style="text-align:center; margin-top:40px; padding:24px; background:var(--light); border-radius:var(--radius);">
+        <h3 style="margin-bottom:8px;">For Businesses & Agencies</h3>
+        <p style="color:var(--gray); margin-bottom:16px;">Need bulk hiring, compliance tools, or white-label solutions?</p>
+        <a href="#waitlist" class="btn btn-secondary">Contact Sales →</a>
+        <p style="font-size:0.85rem; color:var(--gray); margin-top:12px;">Plans from ₹499/month • API access • Dedicated support</p>
+      </div>
+    </div>
+  </section>
 
-      const events = await fetch(API + '/events').then(r => r.json());
-      const users = await fetch(API + '/users').then(r => r.json());
+  <!-- Dignity Awards -->
+  <section class="section awards">
+    <div class="container">
+      <h2 class="section-title">🏆 The Dignity Awards</h2>
+      <p class="section-subtitle">When we succeed, our workers succeed. 5% of all profits fund 100 dreams every year.</p>
+      
+      <div class="award-stats">
+        <div class="stat">
+          <div class="stat-number">5%</div>
+          <div class="stat-label">of profits donated</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">100</div>
+          <div class="stat-label">workers funded yearly</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">₹1L+</div>
+          <div class="stat-label">avg. award value</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">∞</div>
+          <div class="stat-label">impact on communities</div>
+        </div>
+      </div>
+      
+      <p style="max-width: 600px; margin: 0 auto; opacity: 0.9;">
+        Education. Healthcare. Housing. Livelihood. Workers choose their dream — we make it real.
+      </p>
+    </div>
+  </section>
 
-      const doorbell = events.filter(e => e.eventType === 'doorbell.ring').length;
-      const motion = events.filter(e => e.eventType === 'motion.detect').length;
-
-      document.getElementById('total-events').textContent = events.length;
-      document.getElementById('doorbell-count').textContent = doorbell;
-      document.getElementById('motion-count').textContent = motion;
-      document.getElementById('user-count').textContent = users.length;
-
-      const list = document.getElementById('event-list');
-      if (events.length === 0) {
-        list.innerHTML = '<div class="empty">No events yet. Ring your doorbell to test!</div>';
-        return;
-      }
-
-      list.innerHTML = events.slice().reverse().map(e => `
-        <div class="event-item ${e.eventType === 'motion.detect' ? 'motion' : ''}">
-          <div>
-            <div class="event-type">
-              ${e.eventType === 'doorbell.ring' ? '🔔 Doorbell Ring' :
-                e.eventType === 'motion.detect' ? '🚶 Motion Detected' :
-                '❓ ' + e.eventType}
+  <!-- Waitlist Form -->
+  <section id="waitlist" class="section waitlist">
+    <div class="container">
+      <h2 class="section-title text-center">Be Among the First</h2>
+      <p class="section-subtitle text-center">Join 5,000+ families & workers on the waitlist. Get early access + lifetime discount.</p>      
+      <div class="form-container">
+        <div class="success-message" id="successMsg">
+          ✅ Thank you! You're on the list. We'll notify you at launch.
+        </div>
+        
+        <!-- Form: Replace action with your Formspree/Supabase endpoint -->
+        <form id="waitlistForm" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+          <div class="form-group">
+            <label for="name">Full Name *</label>
+            <input type="text" id="name" name="name" required placeholder="Priya Sharma"/>
+          </div>
+          
+          <div class="form-group">
+            <label for="email">Email Address *</label>
+            <input type="email" id="email" name="email" required placeholder="priya@example.com"/>
+          </div>
+          
+          <div class="form-group">
+            <label for="phone">Phone (Optional)</label>
+            <input type="tel" id="phone" name="phone" placeholder="+91 98765 43210"/>
+            <div class="form-note">We'll send SMS updates at launch</div>
+          </div>
+          
+          <div class="form-group">
+            <label for="role">I am a... *</label>
+            <select id="role" name="role" required>
+              <option value="">Select...</option>
+              <option value="employer">Employer (Looking for help)</option>
+              <option value="worker">Worker (Looking for work)</option>
+              <option value="ngo">NGO / Partner Organization</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="location">Location *</label>
+            <select id="location" name="location" required>
+              <option value="">Select your state...</option>
+              <option value="MH">Maharashtra</option>
+              <option value="DL">Delhi-NCR</option>
+              <option value="KA">Karnataka</option>
+              <option value="AP">Andhra Pradesh</option>
+              <option value="GJ">Gujarat</option>
+              <option value="GA">Goa</option>
+              <option value="other">Other (Tell us where)</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="care_for">If care-related, who needs support? <span style="color:var(--gray); font-weight:400;">(Optional)</span></label>            <select id="care_for" name="care_for">
+              <option value="">Select...</option>
+              <option value="self">Myself (personal help)</option>
+              <option value="elder">Elderly parent/family member</option>
+              <option value="child">Child (babysitter/nanny)</option>
+              <option value="patient">Recovering patient</option>
+              <option value="disability">Family member with special needs</option>
+              <option value="other">Other dependent</option>
+            </select>
+            <div class="form-note" id="careNote" style="display:none;">
+              💡 We'll match you with caregivers trained for this specific need.
             </div>
           </div>
-          <div class="event-time">${new Date(e.receivedAt).toLocaleString()}</div>
-        </div>
-      `).join('');
+          
+          <!-- Age Verification Checkbox (Required) -->
+          <div class="form-group" style="background:#F8FAFC; padding:12px; border-radius:8px; border:1px solid #E2E8F0;">
+            <label style="display:flex; align-items:flex-start; gap:10px; cursor:pointer;">
+              <input type="checkbox" name="age_confirm" required style="margin-top:4px; width:18px; height:18px;">
+              <span style="font-size:0.9rem; color:#374151;">
+                <strong>I confirm I am 18 years or older.</strong><br/>
+                <span style="color:#6B7280; font-size:0.85rem;">
+                  This is required for legal contract validity and compliance with Indian labour laws. 
+                  <a href="#" style="color:var(--primary); text-decoration:none;">Learn more</a>.
+                </span>
+              </span>
+            </label>
+          </div>
+          
+          <button type="submit" class="btn" style="width:100%;">🚀 Join Waitlist — Free</button>
+          
+          <p class="form-note text-center" style="margin-top:16px;">
+            🔒 DPDP Act 2023 compliant • Age verified • No spam
+          </p>
+        </form>
+      </div>
+    </div>
+  </section>
 
-    } catch (err) {
-      document.getElementById('db-status').textContent = '🔴 Backend offline or waking up...';
-    }
-  }
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="logo" style="justify-content: center; color: white; margin-bottom: 16px;">
+        <span class="logo-icon">🧹</span>
+        MaidConnect
+      </div>
+      <p style="opacity: 0.8; max-width: 500px; margin: 0 auto;">
+        Ethical hiring for Indian homes. Verified workers. Fair contracts. Dignified work.
+      </p>
+      
+      <div class="footer-links">        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Contact</a>
+        <a href="#">NGO Partners</a>
+      </div>
+      
+      <p class="copyright">
+        © 2026 MaidConnect. Made with ❤️ in Bengaluru.
+      </p>
+    </div>
+  </footer>
 
-  loadData();
-  setInterval(loadData, 30000);
-</script>
-
+  <!-- Scripts -->
+  <script>
+    // Mobile menu toggle
+    document.querySelector('.mobile-toggle').addEventListener('click', function() {
+      const nav = document.querySelector('.nav-links');
+      nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
+    });
+    
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          // Close mobile menu if open
+          document.querySelector('.nav-links').style.display = '';
+        }
+      });
+    });
+    
+    // Show helper note when care option selected
+    document.getElementById('care_for').addEventListener('change', function() {
+      const note = document.getElementById('careNote');
+      if (this.value && this.value !== 'self') {
+        note.style.display = 'block';
+      } else {
+        note.style.display = 'none';
+      }
+    });
+    
+    // Form submission handler (for demo)
+    document.getElementById('waitlistForm').addEventListener('submit', function(e) {
+      // If using Formspree/Supabase, remove this handler and let the form submit naturally
+      e.preventDefault();
+      
+      // Show success message
+      document.getElementById('successMsg').style.display = 'block';      this.reset();
+      
+      // Scroll to success message
+      document.getElementById('successMsg').scrollIntoView({ behavior: 'smooth' });
+      
+      // Optional: Send to Google Sheets / Supabase here
+      // Example: fetch('YOUR_API_ENDPOINT', { method: 'POST', body: JSON.stringify(formData) })
+    });
+    
+    // Simple animation on scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.1 });
+    
+    document.querySelectorAll('.feature-card, .step, .stat, .care-card, .pricing-card').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+      el.style.transition = 'opacity 0.6s, transform 0.6s';
+      observer.observe(el);
+    });
+  </script>
+  
+  <!-- Razorpay SDK (for future donation integration) -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </body>
 </html>
